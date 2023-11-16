@@ -155,12 +155,13 @@ export default class MathFighterScene extends Phaser.Scene {
 		this.resultText = this.add.text(this.gameHalfWidth, 200,
 			// @ts-ignore
 			'0', {fontSize : '32px', fill: '#000'})
-		this.resultText = this.add.text(this.gameHalfWidth, 100,
+		this.questionText = this.add.text(this.gameHalfWidth, 100,
 			// @ts-ignore
 			'0', {fontSize : '32px', fill: '#000'})
 		this.createButtons()
 		this.input.on('gameobjectdown', this.addNumber, this)
-		this.generateQuestion
+		this.generateQuestion()
+
 	}
 
 	//CREATE BUTTONS METHOD
@@ -239,7 +240,7 @@ export default class MathFighterScene extends Phaser.Scene {
 	
 		this.number = parseInt(this.numberArray.join(''))
 
-		this.resultText.setText(this.number)
+		this.resultText.setText (this.number)
 		const textHalfWidth = this.resultText.width * 0.5
 		this.resultText.setX(this.gameHalfWidth - textHalfWidth)
 		event.stopPropagation()
@@ -266,9 +267,9 @@ export default class MathFighterScene extends Phaser.Scene {
 			this.question[1] = numberA * numberB
 		}
 		if(operator === '-') {
-			if(numberA > numberB) {
-			this.question[0] = `${numberA} - ${numberB}`
-			this.question[1] = numberA - numberB
+			if(numberB > numberA) {
+			this.question[0] = `${numberB} - ${numberA}`
+			this.question[1] = numberB - numberA
 			}
 		} else {
 			this.question[0] = `${numberA} - ${numberB}`
