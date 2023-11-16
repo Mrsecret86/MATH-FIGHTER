@@ -26,6 +26,8 @@ export default class MathFighterScene extends Phaser.Scene {
 		this.button0 = undefined
 		this.buttonDel = undefined
 		this.buttonOk = undefined
+		this.numberArray = []
+		this.number = 0
 	}
 	preload() {
 	this.load.image('background','images/bg_layer1.png')
@@ -189,5 +191,35 @@ export default class MathFighterScene extends Phaser.Scene {
 	
 		this.buttonOk = this.add.image(this.button0.x + widthDiff,
 		this.button9.y + heightDiff, 'numbers', 11).setInteractive().setData('value', 'ok')
+	}
+
+	addNumber(pointer, object, event) {
+		let value = object.getData('value')
+
+		if(isNaN(value)) {
+			if(value == 'del')
+			this.numberArray.pop()
+			if(this.numberArray.length < 1) {
+				this.numberArray[0] = 0
+			}
+		}
+
+			if(value == 'ok') {
+				this.checkAnswer()
+				this.numberArray = []
+				this.numberArray[0] = 0
+			}
+
+		else {
+			if(this.numberArray.length==1 && this.numberArray[0]==0){
+				this.numberArray[0] = value
+			} else {
+				if(this.numberArray.length<10){
+					this.numberArray.push(value)
+				}
+			}
+		}
+	
+		this.number = parseInt(this.numberArray.join(''))
 	}
 }
