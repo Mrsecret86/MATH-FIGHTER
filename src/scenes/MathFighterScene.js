@@ -208,7 +208,7 @@ export default class MathFighterScene extends Phaser.Scene {
 		this.button9.y + heightDiff, 'numbers', 11).setInteractive().setData('value', 'ok')
 	}
 
-	//ADD NUMBERS METHOD
+	//ADD NUMBER METHOD
 	addNumber(pointer, object, event) {
 		let value = object.getData('value')
 
@@ -245,7 +245,7 @@ export default class MathFighterScene extends Phaser.Scene {
 		event.stopPropagation()
 	}
 
-	// GET OEPRATOR METHOD
+	// GET OPERATOR METHOD
 	getOperator(){
 		const operator = ['+', '-', 'x', ':']
 		return operator[Phaser.Math.Between(0, 3)]
