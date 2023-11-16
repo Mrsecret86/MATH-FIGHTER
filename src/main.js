@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 
-import MathFighterScene from './MathFighterScene'
+import MathFighterScene from './scenes/MathFighterScene'
 
 const config = {
 	type: Phaser.AUTO,
