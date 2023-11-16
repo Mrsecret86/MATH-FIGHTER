@@ -5,6 +5,7 @@ export default class MathFighterScene extends Phaser.Scene {
 		super('math-fighter-scene')
 	}
 
+	//INIT METHOD
 	init() {
 		this.gameHalfWidth = this.scale.width * 0.5
 		this.gameHalfHeight = this.scale.height * 0.5
@@ -30,6 +31,8 @@ export default class MathFighterScene extends Phaser.Scene {
 		this.number = 0
 		this.question = []
 	}
+
+	//PRELOAD METHOD
 	preload() {
 	this.load.image('background','images/bg_layer1.png')
 	this.load.image('fight-bg','images/fight-bg.png')
@@ -44,6 +47,8 @@ export default class MathFighterScene extends Phaser.Scene {
 	this.load.spritesheet('slash','images/slash.png',
 	{frameHeight: 88, frameWidth: 42})
 	}
+
+	//CREATE METHOD
 	create() {
 	this.add.image(240, 320, 'background')
 	const fight_bg = this.add.image(240, 160, 'fight-bg')
@@ -80,9 +85,13 @@ export default class MathFighterScene extends Phaser.Scene {
 		start_button.destroy()
 	}, this)
 	}
+
+	//UPDATE METHOD
 	update() {
 
 	}
+
+	//CREATE ANOMATION METHOD
 	createAnimation() {
 		//player animations
 	this.anims.create({
@@ -137,6 +146,8 @@ export default class MathFighterScene extends Phaser.Scene {
 		frameRate: 10
 	})
 	}
+
+	//GAME START METHOD
 	gameStart() {
 		this.startGame = true
 		this.player.anims.play('player-standby', true)
@@ -151,6 +162,8 @@ export default class MathFighterScene extends Phaser.Scene {
 		this.input.on('gameobjectdown', this.addNumber, this)
 		this.generateQuestion
 	}
+
+	//CREATE BUTTONS METHOD
 	createButtons() {
 		const startPosY = this.scale.height - 246
 		const widthDiff = 131
@@ -195,6 +208,7 @@ export default class MathFighterScene extends Phaser.Scene {
 		this.button9.y + heightDiff, 'numbers', 11).setInteractive().setData('value', 'ok')
 	}
 
+	//ADD NUMBERS METHOD
 	addNumber(pointer, object, event) {
 		let value = object.getData('value')
 
@@ -204,13 +218,14 @@ export default class MathFighterScene extends Phaser.Scene {
 			if(this.numberArray.length < 1) {
 				this.numberArray[0] = 0
 			}
-		}
+		
 
 			if(value == 'ok') {
 				this.checkAnswer()
 				this.numberArray = []
 				this.numberArray[0] = 0
 			}
+		}
 
 		else {
 			if(this.numberArray.length==1 && this.numberArray[0]==0){
@@ -229,13 +244,19 @@ export default class MathFighterScene extends Phaser.Scene {
 		this.resultText.setX(this.gameHalfWidth - textHalfWidth)
 		event.stopPropagation()
 	}
+
+	// GET OEPRATOR METHOD
 	getOperator(){
-		const operator = ['+','-','x',':']
-		return operator[Phaser.Math.Between(0.3)]
+		const operator = ['+', '-', 'x', ':']
+		return operator[Phaser.Math.Between(0, 3)]
 	}
+
+	// GENERATE QUESTION METHOD
 	generateQuestion(){
 		let numberA = Phaser.Math.Between(0, 50)
 		let numberB = Phaser.Math.Between(0, 50)
+		let operator = this.getOperator()
+
 		if(operator === '+') {
 			this.question[0] = `${numberA} + ${numberB}`
 			this.question[1] = numberA + numberB
@@ -245,8 +266,10 @@ export default class MathFighterScene extends Phaser.Scene {
 			this.question[1] = numberA * numberB
 		}
 		if(operator === '-') {
+			if(numberA > numberB) {
 			this.question[0] = `${numberA} - ${numberB}`
 			this.question[1] = numberA - numberB
+			}
 		} else {
 			this.question[0] = `${numberA} - ${numberB}`
 			this.question[1] = numberA - numberB
@@ -255,7 +278,7 @@ export default class MathFighterScene extends Phaser.Scene {
 			do {
 				numberA = Phaser.Math.Between(0, 50)
 				numberB = Phaser.Math.Between(0, 50)
-			}while(!Number.isInteger(numberA/numberB))
+			}while(!Number.isInteger(numberA / numberB))
 			this.question[0] = `${numberA} : ${numberB}`
 			this.question[1] = numberA / numberB
 		}
