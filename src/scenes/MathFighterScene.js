@@ -30,6 +30,9 @@ export default class MathFighterScene extends Phaser.Scene {
 		this.numberArray = []
 		this.number = 0
 		this.question = []
+		this.correctAnswer = undefined
+		this.playerAttack = false
+		this.enemyAttack = false
 	}
 
 	//PRELOAD METHOD
@@ -84,11 +87,48 @@ export default class MathFighterScene extends Phaser.Scene {
 		this.gameStart()
 		start_button.destroy()
 	}, this)
+
+	this.physics.add.overlap(
+		this.player,
+		this.slash,
+		this.spriteHit,
+		null,
+		this
+	)
+
+	this.physics.add.overlap(
+		this.enemy,
+		this.slash,
+		this.spriteHit,
+		null,
+		this
+	)
 	}
 
 	//UPDATE METHOD
-	update() {
+	update(time) {
+		if(this.correctAnswer === true && !this.playerAttack) {
+			this.player.anims.play('player-attack', true)
+			this.time.delayedCall(500, () => {
+				this.createSlash(this.player.x+60, this.player.y,
+				4, 600)
+			})
+			this.playerAttack = true
+		}
 
+		if (this.correctAnswer === undefined) {
+			this.player.anims.play('player-standby', true)
+			this.player.anims.play('enemy-standBy', true)
+		}
+
+		if(this.correctAnswer === false && !this.enemyAttack) {
+			this.enemy.anims.play('enemy-attack', true)
+			this.time.delayedCall(500, () => {
+				this.createSlash(this.enemy.x-60, this.enemy.y,
+				2, -600, true)
+			})
+			this.enemyAttack = true
+		}
 	}
 
 	//CREATE ANOMATION METHOD
@@ -286,5 +326,44 @@ export default class MathFighterScene extends Phaser.Scene {
 		this.questionText.setText(this.question[0])
 		const textHalfWidth = this.questionText.width * 0.5
 		this.questionText.setX(this.gameHalfWidth - textHalfWidth)
+	}
+
+	// CHECK ANSWER
+	checkAnswer(){
+		if (this.number == this.question[1]){
+			this.correctAnswer = true
+		} else {
+			this.correctAnswer = false
+		}
+	}
+
+	// CREATE SLASH
+	createSlash(x, y, frame, velocity, flip = false) {
+		this.slash.setPosition(x, y)
+		.setActive(true)
+		.setVisible(true)
+		.setFrame(frame)
+		.setFlipX(flip)
+		.setVelocityX(velocity)
+	}
+
+	// SPRITE HIT
+	spriteHit(slash, sprite) {
+		slash.x= 0
+		slash.y = 0
+		slash.setActive(false)
+		slash.setVisible(false)
+		if (sprite.texture.key == 'player') {
+			sprite.anims.play('player-hit', true)
+		} else {
+			sprite.anims.play('enemy-hit', true)
+		}
+
+		this.time.delayedCall(500, () => {
+			this.playerAttack = false
+			this.enemyAttack = false
+			this.correctAnswer = undefined
+			this.generateQuestion()
+		})
 	}
 }
